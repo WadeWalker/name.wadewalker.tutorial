@@ -29,7 +29,7 @@ public class DataSource {
 
     /** List of data objects in this application. */
     protected List<DataObject> listDataObjects;
-    
+
     public class DataObject {
         /** Origin of object. */
         double dX, dY;
