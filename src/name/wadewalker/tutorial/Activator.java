@@ -60,7 +60,7 @@ public class Activator extends AbstractUIPlugin {
     // in libpthread.so (or other sorts of multithreading errors) when you
     // try to run the program.
     static {
-        GLProfile.initSingleton();
+        GLProfile.initSingleton( true );
     }
 
     /**
