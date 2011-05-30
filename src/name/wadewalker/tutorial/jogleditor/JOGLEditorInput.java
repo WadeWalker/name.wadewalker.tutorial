@@ -4,17 +4,17 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-//================================================================
+//==============================================================================
 /**
  * Editor input object for the JOGL editor. Currently these editors
  * aren't associated with any files, but eventually they will be.
  *
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
  * @author Wade Walker
- * @version 1.0
  */
 public class JOGLEditorInput implements IEditorInput {
 
-    //================================================================
+    //==============================================================================
     /**
      * Returns an object which is an instance of the given class
      * associated with this object. Returns null if no such object can
@@ -33,26 +33,46 @@ public class JOGLEditorInput implements IEditorInput {
         return null;
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean exists() {
         return true;
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ImageDescriptor getImageDescriptor() {
         return null;
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "JOGLEditor";
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IPersistableElement getPersistable() {
         return null;
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getToolTipText() {
         return "Editor that uses JOGL";

@@ -6,40 +6,49 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
+//==============================================================================
 /**
- * This class controls all aspects of the application's execution
+ * This class controls what happens when the app starts and stops. This is RCP
+ * boilerplate.
+ *
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
+ * @author Wade Walker
  */
 public class Application implements IApplication {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
+    //==============================================================================
+    /**
+     * {@inheritDoc}
      */
-    public Object start(IApplicationContext context) throws Exception {
+    @Override
+    public Object start( IApplicationContext iapplicationcontext ) throws Exception {
         Display display = PlatformUI.createDisplay();
         try {
-            int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
-            if (returnCode == PlatformUI.RETURN_RESTART)
+            int iReturnCode = PlatformUI.createAndRunWorkbench( display, new ApplicationWorkbenchAdvisor() );
+            if (iReturnCode == PlatformUI.RETURN_RESTART)
                 return IApplication.EXIT_RESTART;
             else
                 return IApplication.EXIT_OK;
-        } finally {
+        }
+        finally {
             display.dispose();
         }
-        
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#stop()
+    //==============================================================================
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void stop() {
         if (!PlatformUI.isWorkbenchRunning())
             return;
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        final Display display = workbench.getDisplay();
-        display.syncExec(new Runnable() {
+        final IWorkbench iworkbench = PlatformUI.getWorkbench();
+        final Display display = iworkbench.getDisplay();
+        display.syncExec( new Runnable() {
             public void run() {
                 if (!display.isDisposed())
-                    workbench.close();
+                    iworkbench.close();
             }
         });
     }

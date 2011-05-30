@@ -30,27 +30,37 @@ import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+//==============================================================================
 /**
- * The activator class controls the plug-in life cycle
+ * The activator class controls the plug-in life cycle.
+ *
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
+ * @author Wade Walker
  */
 public class Activator extends AbstractUIPlugin {
 
-    // The plug-in ID
-    public static final String PLUGIN_ID = "name.wadewalker.tutorial"; //$NON-NLS-1$
+    /** The plug-in ID. */
+    public static final String ssPluginID = "name.wadewalker.tutorial"; //$NON-NLS-1$
 
-    // The shared instance
-    private static Activator plugin;
+    /** The shared instance. */
+    private static Activator sactivator;
     
-    /** Eclipse packages needed during key binding. */
+    /** Eclipse package needed during key binding. */
     private static final String ssDefaultSchemeID = "org.eclipse.ui.defaultAcceleratorConfiguration";
+
+    /** Eclipse package needed during key binding. */
     private static final String ssParentContextID = "org.eclipse.ui.contexts.window";
 
-    /** ID and name of command category used in key binding. */
+    /** ID of command category used in key binding. */
     private static final String ssCommandCategoryID = "Tutorial.commands.category";
+
+    /** Name of command category used in key binding. */
     private static final String ssCommandCategoryName = "Tutorial commands";
 
-    /** ID and name of command context used in key binding. */
+    /** ID of command context used in key binding. */
     private static final String ssContextID = "viewerKeyContext";
+
+    /** Name of command context used in key binding. */
     private static final String ssContextName = "In Placement Editor";
 
     // Needed to set up threading properly for JOGL on Linux systems. This
@@ -63,51 +73,56 @@ public class Activator extends AbstractUIPlugin {
         GLProfile.initSingleton( true );
     }
 
+    //==============================================================================
     /**
-     * The constructor
+     * Constructor.
      */
     public Activator() {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-     */
-    public void start(BundleContext context) throws Exception {
-        super.start(context);
-        plugin = this;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-     */
-    public void stop(BundleContext context) throws Exception {
-        plugin = null;
-        super.stop(context);
-    }
-
+    //==============================================================================
     /**
-     * Returns the shared instance
+     * {@inheritDoc}
+     */
+    @Override
+    public void start( BundleContext bundlecontext ) throws Exception {
+        super.start( bundlecontext );
+        sactivator = this;
+    }
+
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stop( BundleContext bundlecontext ) throws Exception {
+        sactivator = null;
+        super.stop( bundlecontext );
+    }
+
+    //==============================================================================
+    /**
+     * Accessor.
      *
-     * @return the shared instance
+     * @return the shared instance.
      */
     public static Activator getDefault() {
-        return plugin;
+        return sactivator;
     }
 
+    //==============================================================================
     /**
      * Returns an image descriptor for the image file at the given
-     * plug-in relative path
+     * plug-in relative path.
      *
-     * @param path the path
-     * @return the image descriptor
+     * @param sPath the path
+     * @return the image descriptor.
      */
-    public static ImageDescriptor getImageDescriptor(String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    public static ImageDescriptor getImageDescriptor( String sPath ) {
+        return imageDescriptorFromPlugin( ssPluginID, sPath );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Returns an image descriptor for the specified icon.
      *
@@ -124,7 +139,7 @@ public class Activator extends AbstractUIPlugin {
         return( imagedescriptor );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Opens an error dialog box and logs the error.
      * @param sDialogTitle Title of dialog box.
@@ -138,32 +153,32 @@ public class Activator extends AbstractUIPlugin {
         Activator.getDefault().log( sDialogTitle + " : " + istatus.getMessage() );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Opens an "internal error" dialog box and logs the error.
      * @param exception Exception containing the message to put in the dialog box.
      */
     public static void openError( Exception exception ) {
         openError( "Internal error", new Status( Status.ERROR,
-                                                 Activator.PLUGIN_ID,
+                                                 Activator.ssPluginID,
                                                    exception.getMessage() != null
                                                  ? exception.getMessage()
                                                  : exception.getClass().toString() ) );
         Activator.getDefault().log( exception.getMessage(), exception );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Opens an error dialog box and logs the error.
      * @param sDialogTitle Dialog box title.
      * @param sMessage Message to put in dialog box.
      */
     public static void openError( String sDialogTitle, String sMessage ) {
-        openError( sDialogTitle, new Status( Status.ERROR, Activator.PLUGIN_ID, sMessage ) );
+        openError( sDialogTitle, new Status( Status.ERROR, Activator.ssPluginID, sMessage ) );
         Activator.getDefault().log( sDialogTitle + " : " + sMessage );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Prints a message to the Eclipse log.
      *
@@ -173,7 +188,7 @@ public class Activator extends AbstractUIPlugin {
         log( sMessage, null );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Prints a message to the Eclipse log.
      *
@@ -181,10 +196,10 @@ public class Activator extends AbstractUIPlugin {
      * @param exception Exception we're logging.
      */
     public void log( String sMessage, Exception exception ) {
-        getLog().log( new Status( Status.INFO, PLUGIN_ID, Status.OK, sMessage, exception ) );
+        getLog().log( new Status( Status.INFO, ssPluginID, Status.OK, sMessage, exception ) );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Creates key bindings for an array of actions, saving them to
      * the preference store if needed.

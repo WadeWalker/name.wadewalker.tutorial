@@ -4,13 +4,13 @@ import name.wadewalker.tutorial.Activator;
 
 import org.eclipse.jface.action.Action;
 
-//================================================================
+//==============================================================================
 /**
  * Runs or pauses the simulation on alternate button presses.
  * Changes the picture and tooltip of the button accordingly.
  *
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
  * @author Wade Walker
- * @version 1.0
  */
 public class RunPauseAction extends Action {
 
@@ -18,9 +18,9 @@ public class RunPauseAction extends Action {
     public static final String ssID = "JOGLEditor.RunPauseAction";
 
     /** True if the simulation is running, false if it's paused. */
-    private boolean bRunning = false;
+    private boolean bRunning;
 
-    //================================================================
+    //==============================================================================
     /**
      * Constructor.
      */
@@ -32,7 +32,7 @@ public class RunPauseAction extends Action {
         setActionDefinitionId( ssID );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Code to run the action.
      *
@@ -51,7 +51,7 @@ public class RunPauseAction extends Action {
         bRunning = !bRunning;
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Accessor.
      * @return true if the simulation is running, false otherwise.

@@ -12,33 +12,55 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+//==============================================================================
+/**
+ * Configures the workbench window before and after it opens.
+ * 
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
+ * @author Wade Walker
+ */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
-    public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
-        super(configurer);
-    }
+    /** Used if window size not remembered from previous run. */
+    private static final int siInitialWindowWidth = 400;
 
-    public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
-        return new ApplicationActionBarAdvisor(configurer);
-    }
-
-    //================================================================
+    /** Used if window size not remembered from previous run. */
+    private static final int siInitialWindowHeight = 300;
+    
+    //==============================================================================
     /**
-     * Configures the window before it opens.
-     *
+     * Constructor.
+     * @param iworkbenchwindowconfigurer Default configurer.
+     */
+    public ApplicationWorkbenchWindowAdvisor( IWorkbenchWindowConfigurer iworkbenchwindowconfigurer ) {
+        super( iworkbenchwindowconfigurer );
+    }
+
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ActionBarAdvisor createActionBarAdvisor( IActionBarConfigurer iactionbarconfigurer ) {
+        return new ApplicationActionBarAdvisor( iactionbarconfigurer );
+    }
+
+    //==============================================================================
+    /**
+     * Configures the window size, window title, et cetera before it opens.
      * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#preWindowOpen()
      */
     @Override
     public void preWindowOpen() {
         IWorkbenchWindowConfigurer iworkbenchwindowconfigurer = getWindowConfigurer();
         iworkbenchwindowconfigurer.setTitle( "Tutorial" );
-        iworkbenchwindowconfigurer.setInitialSize( new Point( 400, 300) );
+        iworkbenchwindowconfigurer.setInitialSize( new Point( siInitialWindowWidth, siInitialWindowHeight) );
         iworkbenchwindowconfigurer.setShowMenuBar( true );
         iworkbenchwindowconfigurer.setShowCoolBar( true );
         iworkbenchwindowconfigurer.setShowStatusLine( true );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Performs final setup once the window is open.
      *
@@ -51,7 +73,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
         try {
             iworkbenchwindow.getActivePage().openEditor( new JOGLEditorInput(), JOGLEditor.ssID );
-        } catch( PartInitException partinitexception ) {
+        }
+        catch( PartInitException partinitexception ) {
             // TODO: add error handling
         }
     }

@@ -15,6 +15,8 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 
+import com.jogamp.common.nio.Buffers;
+
 import name.wadewalker.tutorial.Activator;
 import name.wadewalker.tutorial.DataSource;
 import name.wadewalker.tutorial.DataSource.DataObject;
@@ -36,12 +38,29 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.jogamp.common.nio.Buffers;
-
+//==============================================================================
+/**
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
+ * @author Wade Walker
+ */
 public class JOGLEditor extends EditorPart {
 
     /** Workbench uses this ID to refer to instances of this type of editor. */
     public static final String ssID = "name.wadewalker.tutorial.jogleditor";
+
+    /** Constant used in FPS calculation. */ 
+    protected static final long slMillisecondsPerSecond = 1000; 
+
+    /** Ratio of world-space units to screen pixels.
+     * Increasing this zooms the display out,
+     * decreasing it zooms the display in. */
+    protected static final float sfObjectUnitsPerPixel = 0.03f;
+
+    /** Amount to increment time on each sim step. */
+    protected static final double sdTimeStep = 0.005;
+    
+    /** Milliseconds to sleep in each render cycle. */
+    protected static final int siSleepPerStepMS = 1;
 
     /** Holds the OpenGL canvas. */
     protected Composite composite;
@@ -56,23 +75,15 @@ public class JOGLEditor extends EditorPart {
     protected DataSource datasource;
 
     /** X distance to translate the viewport by. */
-    protected float fViewTranslateX = 0.0f;
+    protected float fViewTranslateX;
 
     /** Y distance to translate the viewport by. */
-    protected float fViewTranslateY = 0.0f;
-
-    /** Ratio of world-space units to screen pixels.
-     * Increasing this zooms the display out,
-     * decreasing it zooms the display in. */
-    protected float fObjectUnitsPerPixel = 0.03f;
+    protected float fViewTranslateY;
 
     /** Index of vertex buffer object. We store interleaved vertex and color data here
      * like this: x0, r0, y0, g0, z0, b0, x1, r1, y1, g1, z1, b1...
      * Stored in an array because glGenBuffers requires it. */
     protected int [] aiVertexBufferIndices = new int [] {-1};
-
-    /** Constant used in FPS calculation. */ 
-    protected static final long slMillisecondsPerSecond = 1000; 
 
     /** Number of frames drawn since last FPS calculation. */
     protected int iFPSFrames;
@@ -80,7 +91,7 @@ public class JOGLEditor extends EditorPart {
     /** Time in milliseconds at start of FPS calculation interval. */
     protected long lFPSIntervalStartTimeMS;
 
-    //================================================================
+    //==============================================================================
     /**
      * Constructor.
      */
@@ -88,26 +99,26 @@ public class JOGLEditor extends EditorPart {
         datasource = new DataSource();
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void doSave( IProgressMonitor monitor ) {
-        // TODO Auto-generated method stub
-
+    public void doSave( IProgressMonitor iprogressmonitor ) {
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSaveAs() {
-        // TODO Auto-generated method stub
-
     }
 
-    //================================================================
+    //==============================================================================
     /**
-     * Initializes this editor with the given editor site and input.
-     *
-     * @param ieditorsite The editor site.
-     * @param ieditorinput The editor input.
-     * @throws PartInitException if this editor was not initialized successfully.
-     * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+     * <p>Sets up key action handlers.</p>
+     * {@inheritDoc}
      */
     @Override
     public void init( IEditorSite ieditorsite, IEditorInput ieditorinput ) throws PartInitException {
@@ -135,7 +146,7 @@ public class JOGLEditor extends EditorPart {
         }
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Disposes all OpenGL resources in case this view is closed and reopened.
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
@@ -147,22 +158,28 @@ public class JOGLEditor extends EditorPart {
         super.dispose();
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDirty() {
-        // TODO Auto-generated method stub
         return false;
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isSaveAsAllowed() {
-        // TODO Auto-generated method stub
         return false;
     }
 
-    //================================================================
+    //==============================================================================
     /**
-     * Sets up an OpenGL canvas to draw in.
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+     * <p>Sets up an OpenGL canvas to draw in.</p>
+     * {@inheritDoc}
      */
     @Override
     public void createPartControl( Composite compositeParent ) {
@@ -181,21 +198,21 @@ public class JOGLEditor extends EditorPart {
             public void handleEvent( Event event ) {
                 glcanvas.setCurrent();
                 glcontext.makeCurrent();
-                GL2 gl = glcontext.getGL().getGL2();
-                setTransformsAndViewport( gl );
+                GL2 gl2 = glcontext.getGL().getGL2();
+                setTransformsAndViewport( gl2 );
                 glcontext.release();
             }
         });
 
         glcontext.makeCurrent();
-        GL2 gl = glcontext.getGL().getGL2();
-        gl.setSwapInterval( 1 );
-        gl.glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );
-        gl.glColor3f( 1.0f, 0.0f, 0.0f );
-        gl.glHint( GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST );
-        gl.glClearDepth( 1.0 );
-        gl.glLineWidth( 2 );
-        gl.glEnable( GL.GL_DEPTH_TEST );
+        GL2 gl2 = glcontext.getGL().getGL2();
+        gl2.setSwapInterval( 1 );
+        gl2.glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );
+        gl2.glColor3f( 1.0f, 0.0f, 0.0f );
+        gl2.glHint( GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST );
+        gl2.glClearDepth( 1.0 );
+        gl2.glLineWidth( 2 );
+        gl2.glEnable( GL.GL_DEPTH_TEST );
         glcontext.release();
 
         // spawn a worker thread to call the renderer in a loop until the program closes.
@@ -215,16 +232,17 @@ public class JOGLEditor extends EditorPart {
                             render();
                         // else we're paused, so sleep for a little so we don't peg the CPU
                         else
-                            sleep( 250 );
+                            sleep( siSleepPerStepMS );
                     }
-                } catch( InterruptedException interruptedexception ) {
+                }
+                catch( InterruptedException interruptedexception ) {
                     // if sleep interrupted just let the thread quite
                 }
             }
         }).start();
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Calculates the FPS and shows it in the status line.
      */
@@ -242,7 +260,7 @@ public class JOGLEditor extends EditorPart {
         }
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Renders into the GUI thread synchronously. Meant to be called
      * from a worker thread.
@@ -284,7 +302,7 @@ public class JOGLEditor extends EditorPart {
                     glcontext.release();
 
                     // advance time so the data changes for the next frame
-                    datasource.incrementTime( 0.005 );
+                    datasource.incrementTime( sdTimeStep );
 
                     calculateAndShowFPS();
                 }
@@ -292,11 +310,11 @@ public class JOGLEditor extends EditorPart {
         });
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Sets up an orthogonal projection suitable for a 2D CAD program.
      *
-     * @param gl GL object to set transforms and viewport on.
+     * @param gl2 GL object to set transforms and viewport on.
      */
     protected void setTransformsAndViewport( GL2 gl2 ) {
 
@@ -310,10 +328,10 @@ public class JOGLEditor extends EditorPart {
         // set the clipping planes based on the ratio of object units
         // to screen pixels, but preserving the correct aspect ratio
         GLU glu = new GLU();
-        glu.gluOrtho2D( -(fObjectUnitsPerPixel * iWidth) / 2.0f,
-                         (fObjectUnitsPerPixel * iWidth) / 2.0f,
-                        -(fObjectUnitsPerPixel * iHeight) / 2.0f,
-                         (fObjectUnitsPerPixel * iHeight) / 2.0f );
+        glu.gluOrtho2D( -(sfObjectUnitsPerPixel * iWidth) / 2.0f,
+                         (sfObjectUnitsPerPixel * iWidth) / 2.0f,
+                        -(sfObjectUnitsPerPixel * iHeight) / 2.0f,
+                         (sfObjectUnitsPerPixel * iHeight) / 2.0f );
 
         gl2.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
         gl2.glViewport( 0, 0, iWidth, iHeight );
@@ -321,13 +339,14 @@ public class JOGLEditor extends EditorPart {
         gl2.glTranslatef( fViewTranslateX, fViewTranslateY, 0.0f );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Creates vertex buffer object used to store vertices and colors
      * (if it doesn't exist). Fills the object with the latest
      * vertices and colors from the data store.
      *
      * @param gl2 GL object used to access all GL functions.
+     * @param listDataObjects Data objects to get vertices from.
      * @return the number of vertices in each of the buffers.
      */
     protected int [] createAndFillVertexBuffer( GL2 gl2, List<DataObject> listDataObjects ) {
@@ -367,7 +386,7 @@ public class JOGLEditor extends EditorPart {
         return( aiNumOfVertices );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Stores the vertices and colors of one object interleaved into
      * a buffer (vertices in counterclockwise order).
@@ -409,7 +428,7 @@ public class JOGLEditor extends EditorPart {
         floatbuffer.put( dataobject.getColor()[2] );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Deletes the vertex and color buffers.
      */
@@ -421,9 +440,11 @@ public class JOGLEditor extends EditorPart {
         glcontext.release();
     }
 
+    //==============================================================================
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setFocus() {
-        // TODO Auto-generated method stub
-
     }
 }

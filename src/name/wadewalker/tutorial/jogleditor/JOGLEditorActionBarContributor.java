@@ -5,19 +5,19 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.EditorActionBarContributor;
 
-//================================================================
+//==============================================================================
 /**
  * Contributes the JOGLEditor's actions to the action bar.
  *
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
  * @author Wade Walker
- * @version 1.0
  */
 public class JOGLEditorActionBarContributor extends EditorActionBarContributor {
 
     /** Runs and pauses the simulation. */
     private RunPauseAction runpauseaction;
 
-    //================================================================
+    //==============================================================================
     /**
      * Constructor. Creates the actions.
      */
@@ -25,7 +25,7 @@ public class JOGLEditorActionBarContributor extends EditorActionBarContributor {
         runpauseaction = new RunPauseAction();
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Registers action handlers.
      *
@@ -41,7 +41,7 @@ public class JOGLEditorActionBarContributor extends EditorActionBarContributor {
         iactionbars.setGlobalActionHandler( RunPauseAction.ssID, runpauseaction );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Contributes the editor's actions to the tool bar.
      *

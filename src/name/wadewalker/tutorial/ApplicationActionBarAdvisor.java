@@ -11,19 +11,19 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
-//================================================================
+//==============================================================================
 /**
  * Creates, adds, and disposes the actions for the workbench window.
  *
+ * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
  * @author Wade Walker
- * @version 1.0
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     /** Exits the app. */
     private IWorkbenchAction iworkbenchactionExit;
 
-    //================================================================
+    //==============================================================================
     /**
      * Constructor.
      *
@@ -33,7 +33,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         super( iactionbarconfigurer );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Creates and registers actions.
      * 
@@ -46,7 +46,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         register( iworkbenchactionExit );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Puts actions into the main menu bar.
      *
@@ -61,7 +61,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menumanagerFile.add( iworkbenchactionExit );
     }
 
-    //================================================================
+    //==============================================================================
     /**
      * Puts the tool bar into the "cool bar" for the window.
      *
