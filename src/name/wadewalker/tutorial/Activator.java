@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GLProfile;
-
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
@@ -62,16 +60,6 @@ public class Activator extends AbstractUIPlugin {
 
     /** Name of command context used in key binding. */
     private static final String ssContextName = "In Placement Editor";
-
-    // Needed to set up threading properly for JOGL on Linux systems. This
-    // has to be done before any X11 calls, so it goes here in the class
-    // Eclipse loads first.
-    // NOTE: If you don't put this early enough, you'll probably get SIGSEGV
-    // in libpthread.so (or other sorts of multithreading errors) when you
-    // try to run the program.
-    static {
-        GLProfile.initSingleton();
-    }
 
     //==============================================================================
     /**

@@ -1,6 +1,10 @@
 package name.wadewalker.tutorial.jogleditor;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -16,11 +20,13 @@ import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.common.util.JarUtil;
 
 import name.wadewalker.tutorial.Activator;
 import name.wadewalker.tutorial.DataSource;
 import name.wadewalker.tutorial.DataSource.DataObject;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.bindings.keys.ParseException;
@@ -183,6 +189,29 @@ public class JOGLEditor extends EditorPart {
      */
     @Override
     public void createPartControl( Composite compositeParent ) {
+        JarUtil.setResolver( new JarUtil.Resolver() {
+            public URL resolve( URL url ) {
+                try {
+                    URL urlTest = FileLocator.resolve( url );
+                    // HACK: required because FileLocator.resolve() doesn't return an
+                    // escaped URL, which makes conversion to a URI inside JOGL fail.
+                    // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=145096 for details.
+                    URI resolvedUri = null;
+                    try {
+                        resolvedUri = new URI(urlTest.getProtocol(), urlTest.getPath(), null);
+                    } catch( URISyntaxException e ) {
+                        // should never happen, since FileLocator's URLs should at least be syntactically correct
+                        e.printStackTrace();
+                    }
+                    URL urlNew = resolvedUri.toURL();
+                    return( urlNew ); 
+                }
+                catch( IOException ioexception ) {
+                    return( url );
+                }
+            }
+        } );
+
         GLProfile glprofile = GLProfile.get( GLProfile.GL2 );
 
         composite = new Composite( compositeParent, SWT.NONE );
