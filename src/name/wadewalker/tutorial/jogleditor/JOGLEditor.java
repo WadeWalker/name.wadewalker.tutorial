@@ -195,14 +195,15 @@ public class JOGLEditor extends EditorPart {
                     // HACK: required because FileLocator.resolve() doesn't return an
                     // escaped URL, which makes conversion to a URI inside JOGL fail.
                     // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=145096 for details.
-                    URI resolvedUri = null;
+                    URI uriResolved = null;
                     try {
-                        resolvedUri = new URI(urlTest.getProtocol(), urlTest.getPath(), null);
-                    } catch( URISyntaxException e ) {
-                        // should never happen, since FileLocator's URLs should at least be syntactically correct
-                        e.printStackTrace();
+                        uriResolved = new URI(urlTest.getProtocol(), urlTest.getPath(), null);
                     }
-                    URL urlNew = resolvedUri.toURL();
+                    catch( URISyntaxException urisyntaxexception ) {
+                        // should never happen, since FileLocator's URLs should at least be syntactically correct
+                        urisyntaxexception.printStackTrace();
+                    }
+                    URL urlNew = uriResolved.toURL();
                     return( urlNew ); 
                 }
                 catch( IOException ioexception ) {
