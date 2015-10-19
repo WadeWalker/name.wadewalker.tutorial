@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="name.wadewalker.tutorial.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="RCP Perspective"
+            class="name.wadewalker.tutorial.Perspective"
+            id="name.wadewalker.tutorial.perspective">
+      </perspective>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="name.wadewalker.tutorial.application"
+            name="Tutorial">
+         <property
+               name="windowImages"
+               value="icons/alt_window_16.gif,icons/alt_window_32.gif">
+         </property>
+         <property
+               name="appName"
+               value="Tutorial">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="name.wadewalker.tutorial.jogleditor.JOGLEditor"
+            contributorClass="name.wadewalker.tutorial.jogleditor.JOGLEditorActionBarContributor"
+            default="false"
+            id="name.wadewalker.tutorial.jogleditor"
+            name="JOGLEditor">
+      </editor>
+   </extension>
+
+</plugin>
