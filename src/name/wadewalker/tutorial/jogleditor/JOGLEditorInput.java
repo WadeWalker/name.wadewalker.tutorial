@@ -9,7 +9,7 @@ import org.eclipse.ui.IPersistableElement;
  * Editor input object for the JOGL editor. Currently these editors
  * aren't associated with any files, but eventually they will be.
  *
- * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
+ * Copyright (c) 2010-2015 Wade Walker. Free for any use, but credit is appreciated.
  * @author Wade Walker
  */
 public class JOGLEditorInput implements IEditorInput {
@@ -25,7 +25,7 @@ public class JOGLEditorInput implements IEditorInput {
      * object does not have an adapter for the given class.
      * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
      */
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object getAdapter( Class classAdapter ) {
         if( classAdapter.equals( JOGLEditorInput.class ) )
             return this;

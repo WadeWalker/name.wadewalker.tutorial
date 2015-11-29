@@ -32,7 +32,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle.
  *
- * Copyright (c) 2010-2011 Wade Walker. Free for any use, but credit is appreciated.
+ * Copyright (c) 2010-2015 Wade Walker. Free for any use, but credit is appreciated.
  * @author Wade Walker
  */
 public class Activator extends AbstractUIPlugin {
@@ -220,10 +220,10 @@ public class Activator extends AbstractUIPlugin {
         assert( aiaction.length == asKey.length );
 
         // services outside loop for speed
-        IHandlerService ihandlerservice = (IHandlerService)iworkbenchpartsite.getService( IHandlerService.class );
-        ICommandService icommandservice = (ICommandService)iworkbenchpartsite.getService( ICommandService.class );
-        IContextService icontextservice = (IContextService)iworkbenchpartsite.getService( IContextService.class );
-        IBindingService ibindingservice = (IBindingService)PlatformUI.getWorkbench().getAdapter( IBindingService.class );
+        IHandlerService ihandlerservice = iworkbenchpartsite.getService( IHandlerService.class );
+        ICommandService icommandservice = iworkbenchpartsite.getService( ICommandService.class );
+        IContextService icontextservice = iworkbenchpartsite.getService( IContextService.class );
+        IBindingService ibindingservice = PlatformUI.getWorkbench().getAdapter( IBindingService.class );
 
         // current bindings
         Binding [] abinding = ibindingservice.getBindings();
