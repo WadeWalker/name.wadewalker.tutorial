@@ -13,7 +13,7 @@
 
    <windowImages i16="icons/alt_window_16.gif" i32="icons/alt_window_32.gif"/>
 
-   <launcher>
+   <launcher name="Tutorial">
       <solaris/>
       <win useIco="false">
          <bmp/>
