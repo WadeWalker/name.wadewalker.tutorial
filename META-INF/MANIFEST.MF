@@ -2,6 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tutorial
 Bundle-SymbolicName: name.wadewalker.tutorial;singleton:=true
+Automatic-Module-Name: name.wadewalker.tutorial
 Bundle-Version: 1.0.0
 Bundle-Activator: name.wadewalker.tutorial.Activator
 Bundle-Vendor: Wade Walker
