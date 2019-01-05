@@ -9,14 +9,14 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.List;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GL2ES1;
-import javax.media.opengl.GLContext;
-import javax.media.opengl.GLDrawableFactory;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.fixedfunc.GLMatrixFunc;
-import javax.media.opengl.glu.GLU;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLDrawableFactory;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
+import com.jogamp.opengl.glu.GLU;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.common.util.JarUtil;
